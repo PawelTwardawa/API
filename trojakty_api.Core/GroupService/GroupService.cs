@@ -33,7 +33,7 @@ namespace trojakty_api.Core.GroupService
             _groupQuestionRepository = groupQuestionRepository;
         }
 
-        public async Task<Group> CreateGroup(GroupDTO groupDto, User user)
+        public async Task<Group> CreateGroupAsync(GroupDTO groupDto, User user)
         {
             if ((groupDto == null))
                 throw new TrojkatyCoreException("Groups cannot be null ");
@@ -43,7 +43,7 @@ namespace trojakty_api.Core.GroupService
 
             foreach (var q in groupDto.Questions)
             {
-                var question = await _questionService.CreateQuestion(q);
+                var question = await _questionService.CreateQuestionAsync(q);
 
                 group.Questions.Add(new GroupQuestion(){ Group = group, Question = question});
             }
@@ -58,12 +58,12 @@ namespace trojakty_api.Core.GroupService
             return group;
         }
 
-        public async Task<List<Group>> GetGroups(User user)
+        public async Task<List<Group>> GetGroupsAsync(User user)
         {
             return await Task.Run(() => _userGroupRepository.FindBy(x => x.User == user).Select(g => g.Group).ToList());
         }
 
-        public async Task<Group> GetGroup(int id, User user)
+        public async Task<Group> GetGroupAsync(int id, User user)
         {
             //return await Task.Run(() => _groupRepository.FindBy(x => x.Id == id).SingleOrDefault());
             return await Task.Run(() =>
@@ -73,7 +73,7 @@ namespace trojakty_api.Core.GroupService
 
         }
 
-        public async Task<Group> InsertQuestion(Group group, QuestionDTO questionDto)
+        public async Task<Group> InsertQuestionAsync(Group group, QuestionDTO questionDto)
         {
             if (group == null)
                 throw new TrojkatyCoreException($"Cannot find group");
@@ -82,7 +82,7 @@ namespace trojakty_api.Core.GroupService
             {
                 var g = _groupRepository.FindBy(x => x.Id == group.Id).Include(x => x.Questions).SingleOrDefault();
                 
-                var question = await _questionService.CreateQuestion(questionDto);
+                var question = await _questionService.CreateQuestionAsync(questionDto);
                 g.Questions.Add(new GroupQuestion() {Question = question});
                 await _groupRepository.SaveAsync();
 
@@ -90,7 +90,7 @@ namespace trojakty_api.Core.GroupService
             });
         }
 
-        public async Task<Group> RemoveQuestion(Group group, Question question)
+        public async Task<Group> RemoveQuestionAsync(Group group, Question question)
         {
             if (group == null)
                 throw new TrojkatyCoreException($"Cannot find group");
@@ -112,7 +112,7 @@ namespace trojakty_api.Core.GroupService
             });
         }
 
-        public async Task<Group> InsertUser(Group group, User user)
+        public async Task<Group> InsertUserAsync(Group group, User user)
         {
             if (group == null)
                 throw new TrojkatyCoreException($"Cannot find group");
@@ -138,7 +138,7 @@ namespace trojakty_api.Core.GroupService
             });
         }
 
-        public async Task<Group> RemoveUser(Group group, User user)
+        public async Task<Group> RemoveUserAsync(Group group, User user)
         {
             if (group == null)
                 throw new TrojkatyCoreException($"Cannot find group");
@@ -170,7 +170,7 @@ namespace trojakty_api.Core.GroupService
             });
         }
 
-        public async Task<Group> Publish(Group group) //TODO: jezeli w ktoryms pytaniu nie ma kategorii to nie upubliczniamy zadnego
+        public async Task<Group> PublishAsync(Group group) //TODO: jezeli w ktoryms pytaniu nie ma kategorii to nie upubliczniamy zadnego
         {
             if (group == null)
                 throw new TrojkatyCoreException($"Cannot find group");
@@ -185,7 +185,7 @@ namespace trojakty_api.Core.GroupService
                     throw  new TrojkatyCoreException("Cannot publish questions without category");
                 qg.Question.Public = true;
                 var q = _mapper.Map<QuestionDTO>(qg.Question);
-                await _questionService.EditQuestion(qg.Question.Id, q);
+                await _questionService.EditQuestionAsync(qg.Question.Id, q);
             }
 
             return groupPublish;

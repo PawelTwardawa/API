@@ -44,8 +44,8 @@ namespace trojkaty_api.Controllers
                 return Unauthorized();
             try
             {
-                var questions = await _validateService.GetAll();
-                return Ok(_mapper.Map<List<QuestionDTO>>(questions));
+                var questions = await _validateService.GetAllAsync();
+                return Ok(questions);
             }
             catch (TrojkatyCoreException ex)
             {
@@ -63,10 +63,10 @@ namespace trojkaty_api.Controllers
                 return Unauthorized();
             try
             {
-                var question = await _questionService.GetQuestion(id);
+                var question = await _questionService.GetQuestionAsync(id);
                 if(question == null)
                     throw new TrojkatyCoreException($"Cannot find question on id {id}");
-                var v = await _validateService.ConfirmValidation(question, publish);
+                var v = await _validateService.ConfirmValidationAsync(question, publish);
                 return Ok(_mapper.Map<ValidateResponseDTO>(v));
             }
             catch (TrojkatyCoreException ex)

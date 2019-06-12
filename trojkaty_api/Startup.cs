@@ -23,6 +23,7 @@ using trojkaty_api.Helpers;
 using trojkaty_api.DataAccess.Repositories;
 using trojkaty_api.DataAccess.Models;
 using trojakty_api.Core.QuestionService;
+using trojakty_api.Core.StatisticService;
 using trojakty_api.Core.ValidateService;
 
 namespace trojkaty_api
@@ -104,6 +105,7 @@ namespace trojkaty_api
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IValidateService, ValidateService>();
+            services.AddScoped<IStatisticService, StatisticService>();
 
         }
 

@@ -38,7 +38,7 @@ namespace trojkaty_api.Controllers
            
             try
             {
-                var group = await _groupService.CreateGroup(groupDto, user);
+                var group = await _groupService.CreateGroupAsync(groupDto, user);
                 return Ok(new {id = group.Id, name = group.Name});
             }
             catch (TrojkatyCoreException ex)
@@ -53,7 +53,7 @@ namespace trojkaty_api.Controllers
         public async Task<IActionResult> AllGroup()
         {
             User user = _userService.GetByEmail(HttpContext.User.Identity.Name);
-            var v = await _groupService.GetGroups(user);
+            var v = await _groupService.GetGroupsAsync(user);
             return Ok(_mapper.Map<List<Group>,List<GroupResponseDTO>>(v));
         }
 
@@ -62,11 +62,11 @@ namespace trojkaty_api.Controllers
         public async Task<IActionResult> InsertQuestion(int id, QuestionDTO questionDto)
         {
             User user = _userService.GetByEmail(HttpContext.User.Identity.Name);
-            var group = await _groupService.GetGroup(id, user);
+            var group = await _groupService.GetGroupAsync(id, user);
 
             try
             {
-                var result = await _groupService.InsertQuestion(group, questionDto);
+                var result = await _groupService.InsertQuestionAsync(group, questionDto);
 
                 return Ok(_mapper.Map<Group, GroupResponseDTO>(result));
             }
@@ -82,11 +82,11 @@ namespace trojkaty_api.Controllers
         {
             User user = _userService.GetByEmail(HttpContext.User.Identity.Name);
             var userInserted = _userService.GetByEmail(email);
-            var group = await _groupService.GetGroup(id, user);
+            var group = await _groupService.GetGroupAsync(id, user);
 
             try
             {
-                var result = await _groupService.InsertUser(group, userInserted);
+                var result = await _groupService.InsertUserAsync(group, userInserted);
 
                 return Ok(_mapper.Map<Group, GroupResponseDTO>(result));
             }
@@ -102,11 +102,11 @@ namespace trojkaty_api.Controllers
         {
             User user = _userService.GetByEmail(HttpContext.User.Identity.Name);
             var userDeleted = _userService.GetByEmail(email);
-            var group = await _groupService.GetGroup(id, user);
+            var group = await _groupService.GetGroupAsync(id, user);
 
             try
             {
-                var result = await _groupService.RemoveUser(group, userDeleted);
+                var result = await _groupService.RemoveUserAsync(group, userDeleted);
 
                 return Ok(_mapper.Map<Group, GroupResponseDTO>(result));
             }
@@ -121,12 +121,12 @@ namespace trojkaty_api.Controllers
         public async Task<IActionResult> DeleteUser(int idGroup, int idQuestion)
         {
             User user = _userService.GetByEmail(HttpContext.User.Identity.Name);
-            var group = await _groupService.GetGroup(idGroup, user);
-            var question = await _questionService.GetQuestion(idQuestion);
+            var group = await _groupService.GetGroupAsync(idGroup, user);
+            var question = await _questionService.GetQuestionAsync(idQuestion);
 
             try
             {
-                var result = await _groupService.RemoveQuestion(group, question);
+                var result = await _groupService.RemoveQuestionAsync(group, question);
 
                 return Ok(_mapper.Map<Group, GroupResponseDTO>(result));
             }
@@ -144,9 +144,9 @@ namespace trojkaty_api.Controllers
             {
                 User user = _userService.GetByEmail(HttpContext.User.Identity.Name);
 
-                var group = await _groupService.GetGroup(id, user);
+                var group = await _groupService.GetGroupAsync(id, user);
 
-                var retult = await _groupService.Publish(group);
+                var retult = await _groupService.PublishAsync(group);
 
                 return Ok(_mapper.Map<Group, GroupResponseDTO>(retult));
             }

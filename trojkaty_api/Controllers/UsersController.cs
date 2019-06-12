@@ -67,7 +67,7 @@ namespace trojkaty_api.Controllers
         {
             try
             {
-                var user = await  _userService.Create(userDTO);
+                var user = await  _userService.CreateAsync(userDTO);
                 return Ok();
             }
             catch (TrojkatyCoreException ex)

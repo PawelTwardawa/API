@@ -42,9 +42,13 @@ namespace trojakty_api.Core.QuestionService
                 throw new TrojkatyCoreException("Answers couldn't be the same");
         }
 
-        public async Task<Question> CreateQuestion(QuestionDTO questionDto)
+        public async Task<Question> CreateQuestionAsync(QuestionDTO questionDto)
         {
             Category category = null;
+
+            if(_questionRepository.FindBy(x => x.QuestionText == questionDto.Question).Count() >= 1)
+                throw new TrojkatyCoreException("Question already exists");
+
             if (questionDto.CategoryId != null)
                 category = _categoryRepository.FindBy(x => x.Id == questionDto.CategoryId).SingleOrDefault();
 
@@ -66,9 +70,9 @@ namespace trojakty_api.Core.QuestionService
             return question;
         }
 
-        public async Task<Question> EditQuestion(int id, QuestionDTO questionDto)
+        public async Task<Question> EditQuestionAsync(int id, QuestionDTO questionDto)
         {
-            var question = await GetQuestion(id);
+            var question = await GetQuestionAsync(id);
 
             if (question == null)
                 throw new TrojkatyCoreException($"Cannot find question on id = {id}");
@@ -97,7 +101,7 @@ namespace trojakty_api.Core.QuestionService
             return question;
         }
 
-        public async Task<Question> GetQuestion()
+        public async Task<Question> GetQuestionAsync()
         {
             Random random = new Random();
 
@@ -107,7 +111,7 @@ namespace trojakty_api.Core.QuestionService
             );
         }
 
-        public async Task<List<Question>> GetQuestions(Group group)
+        public async Task<List<Question>> GetQuestionsAsync(Group group)
         {
             return await Task.Run(() =>
             {
@@ -118,16 +122,16 @@ namespace trojakty_api.Core.QuestionService
             });
         }
 
-        public async Task<List<Question>> GetQuestions(int count)
+        public async Task<List<Question>> GetQuestionsAsync(int count)
         {
             return await Task.Run(() =>
             {
-                //return _questionRepository.GetAll().OrderBy(r => Guid.NewGuid()).Take(count).AsEnumerable().ToList();
+                //return _questionRepository.GetAllAsync().OrderBy(r => Guid.NewGuid()).Take(count).AsEnumerable().ToList();
                 return _questionRepository.FindBy(x => x.Public == true).OrderBy(r => Guid.NewGuid()).Take(count).Include(x => x.Category).AsEnumerable().ToList();
             });
         }
 
-        public async Task<List<Question>> GetQuestions(int count, Category category)
+        public async Task<List<Question>> GetQuestionsAsync(int count, Category category)
         {
             return await Task.Run(() =>
             {
@@ -135,7 +139,7 @@ namespace trojakty_api.Core.QuestionService
             });
         }
 
-        public async Task<Question> GetQuestion(Category category)
+        public async Task<Question> GetQuestionAsync(Category category)
         {
             return await Task.Run(() =>
             {
@@ -143,7 +147,7 @@ namespace trojakty_api.Core.QuestionService
             });
         }
 
-        public async Task<Question> GetQuestion(int questionId)
+        public async Task<Question> GetQuestionAsync(int questionId)
         {
             return await Task.FromResult(
 
@@ -151,7 +155,7 @@ namespace trojakty_api.Core.QuestionService
             );
         }
 
-        public async Task<Category> CreateCategory(CategoryDTO categoryDto)
+        public async Task<Category> CreateCategoryAsync(CategoryDTO categoryDto)
         {
             var cat = _categoryRepository.FindBy(x => x.Name == categoryDto.Category).SingleOrDefault();
 
@@ -166,9 +170,9 @@ namespace trojakty_api.Core.QuestionService
             return category;
         }
 
-        public async Task<Category> EditCategory(int id, CategoryDTO categoryDto)
+        public async Task<Category> EditCategoryAsync(int id, CategoryDTO categoryDto)
         {
-            var category = await GetCategory(id);
+            var category = await GetCategoryAsync(id);
             if (category == null)
                 throw  new TrojkatyCoreException($"Cannot find category on id = {id}");
 
@@ -186,7 +190,7 @@ namespace trojakty_api.Core.QuestionService
             return category;
         }
 
-        public async Task<Category> GetCategory()
+        public async Task<Category> GetCategoryAsync()
         {
             return await Task.FromResult(
 
@@ -194,7 +198,7 @@ namespace trojakty_api.Core.QuestionService
             );
         }
 
-        public async Task<Category> GetCategory(int categoryId)
+        public async Task<Category> GetCategoryAsync(int categoryId)
         {
             return await Task.FromResult(
 
@@ -202,7 +206,7 @@ namespace trojakty_api.Core.QuestionService
             );
         }
 
-        public async Task<List<Category>> GetCategories()
+        public async Task<List<Category>> GetCategoriesAsync()
         {
             return await Task.Run(() => _categoryRepository.GetAll().ToList());
         }

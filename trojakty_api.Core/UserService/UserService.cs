@@ -53,7 +53,7 @@ namespace trojakty_api.Core.UserService
 
         //}
 
-        public async Task<User> Create(UserDTO userDTO)
+        public async Task<User> CreateAsync(UserDTO userDTO)
         {
             if (string.IsNullOrWhiteSpace(userDTO.Password)) throw new TrojkatyCoreException("Password is required");
             if( !userDTO.Email.Contains("@") || !userDTO.Email.Contains(".")) throw new TrojkatyCoreException("Incorrect email format");
@@ -79,7 +79,7 @@ namespace trojakty_api.Core.UserService
             return user;
         }
 
-        public async void Delete(UserDTO userDTO)
+        public async void DeleteAsync(UserDTO userDTO)
         {
             var user = _userRepository.FindBy(u => u.Email == userDTO.Email).SingleOrDefault();
 

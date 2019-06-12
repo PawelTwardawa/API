@@ -38,7 +38,7 @@ namespace trojkaty_api.Controllers
                 return Unauthorized();
             try
             {
-                var category = await _questionService.CreateCategory(categoryDTO);
+                var category = await _questionService.CreateCategoryAsync(categoryDTO);
                 return Ok(category);
             }
             catch (TrojkatyCoreException ex)
@@ -51,7 +51,7 @@ namespace trojkaty_api.Controllers
         [HttpGet("random")]
         public async Task<IActionResult> GetRandom()
         {
-            var category = await _questionService.GetCategory();
+            var category = await _questionService.GetCategoryAsync();
 
             return Ok(category);
         }
@@ -59,7 +59,7 @@ namespace trojkaty_api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
-            var categories = await _questionService.GetCategories();
+            var categories = await _questionService.GetCategoriesAsync();
 
             return Ok(categories);
         }
@@ -67,7 +67,7 @@ namespace trojkaty_api.Controllers
         [HttpGet("byId/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var category = await _questionService.GetCategory(id);
+            var category = await _questionService.GetCategoryAsync(id);
 
             return Ok(category);
         }
@@ -82,7 +82,7 @@ namespace trojkaty_api.Controllers
                 return Unauthorized();
             try
             {
-                var category = await _questionService.EditCategory(id, categoryDto);
+                var category = await _questionService.EditCategoryAsync(id, categoryDto);
 
                 return Ok(category);
             }

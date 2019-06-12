@@ -8,8 +8,8 @@ namespace trojakty_api.Core.UserService
     public interface IUserService
     {
         User Authenticate(UserDTO userDTO);
-        Task<User> Create(UserDTO userDTO);
-        void Delete(UserDTO userDTO);
+        Task<User> CreateAsync(UserDTO userDTO);
+        void DeleteAsync(UserDTO userDTO);
         IEnumerable<User> GetAll();
         User GetByEmail(string email);
     }

@@ -35,7 +35,7 @@ namespace trojkaty_api.Controllers
         {
             try
             {
-                var question = await _questionService.CreateQuestion(questionDto);
+                var question = await _questionService.CreateQuestionAsync(questionDto);
                 return Ok(_mapper.Map<QuestionDTO>(question));
             }
             catch (TrojkatyCoreException ex)
@@ -48,7 +48,7 @@ namespace trojkaty_api.Controllers
         [HttpGet("random")]
         public async Task<IActionResult> GetRandom()
         {
-            var question = await _questionService.GetQuestion();
+            var question = await _questionService.GetQuestionAsync();
 
             return Ok(_mapper.Map<QuestionDTO>(question));
         }
@@ -57,7 +57,7 @@ namespace trojkaty_api.Controllers
         [HttpGet("random/{count}")]
         public async Task<IActionResult> RandomCount(int count)
         {
-            var question = await _questionService.GetQuestions(count);
+            var question = await _questionService.GetQuestionsAsync(count);
 
             //return Ok(question);
             return Ok(_mapper.Map<List<QuestionDTO>>(question));
@@ -67,7 +67,7 @@ namespace trojkaty_api.Controllers
         [HttpGet("byId/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var question = await _questionService.GetQuestion(id);
+            var question = await _questionService.GetQuestionAsync(id);
 
             return Ok(_mapper.Map<QuestionDTO>(question));
         }
@@ -77,9 +77,9 @@ namespace trojkaty_api.Controllers
         public async Task<IActionResult> GetByGroup(int id)
         {
             User user = _userService.GetByEmail(HttpContext.User.Identity.Name);
-            var group = await _groupService.GetGroup(id, user);
+            var group = await _groupService.GetGroupAsync(id, user);
 
-            var question = await _questionService.GetQuestions(group);
+            var question = await _questionService.GetQuestionsAsync(group);
 
             return Ok(_mapper.Map<List<QuestionDTO>>(question));
         }
@@ -88,10 +88,10 @@ namespace trojkaty_api.Controllers
         [HttpGet("fromCategory/id={id},count={count}")]
         public async Task<IActionResult> GetFromCategory(int id, int count)
         {
-            var cat = await _questionService.GetCategory(id);
+            var cat = await _questionService.GetCategoryAsync(id);
             if (cat == null)
                 return BadRequest(new { message = "couldn't find category" });
-            var question = await _questionService.GetQuestions(count, cat);
+            var question = await _questionService.GetQuestionsAsync(count, cat);
 
             return Ok(_mapper.Map<List<QuestionDTO>>(question));
         }
@@ -100,10 +100,10 @@ namespace trojkaty_api.Controllers
         [HttpGet("fromCategory/{id}")]
         public async Task<IActionResult> GetFromCategory(int id)
         {
-            var cat = await _questionService.GetCategory(id);
+            var cat = await _questionService.GetCategoryAsync(id);
             if (cat == null)
                 return BadRequest(new { message = "couldn't find category" });
-            var question = await _questionService.GetQuestion( cat);
+            var question = await _questionService.GetQuestionAsync( cat);
 
             return Ok(_mapper.Map<QuestionDTO>(question));
         }
@@ -117,7 +117,7 @@ namespace trojkaty_api.Controllers
 
             try
             {
-                var question = await _questionService.EditQuestion(id, questionDto);
+                var question = await _questionService.EditQuestionAsync(id, questionDto);
 
                 return Ok(_mapper.Map<QuestionDTO>(question));
             }
